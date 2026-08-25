@@ -174,7 +174,7 @@ canvas#particles { position: absolute; inset: 0; width: 100%; height: 100%; z-in
 .hero-typing { font-family: var(--font-mono); font-size: 16px; color: var(--fg2); margin-bottom: 28px; min-height: 24px; }
 .cursor { display: inline-block; width: 2px; height: 1em; background: var(--accent); margin-left: 2px; vertical-align: middle; animation: blink 1s step-end infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.hero-desc { font-size: 15px; line-height: 1.75; color: var(--fg2); max-width: 540px; margin-bottom: 36px; }
+.hero-desc { font-size: 16px; line-height: 1.8; color: var(--fg2); margin-bottom: 36px; }
 .hero-desc p + p { margin-top: 14px; }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn-primary { padding: 12px 28px; background: var(--accent); color: var(--on-accent); border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
@@ -198,35 +198,17 @@ canvas#particles { position: absolute; inset: 0; width: 100%; height: 100%; z-in
 
 /* ── SECTIONS ── */
 section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
-/* Work 区的引言 —— 和下面的案例卡片同宽，左右边缘完全对齐。
-   桌面上分两栏：单栏铺满 1020px 会到 130 字符一行，远超 65–75 的可读上限；
-   分成两栏后每栏 498px，英文约 59 字符、中文约 29 字，正好落在舒适区。
-   栏距 24px 特意和卡片的 gap 一样 —— 中缝对齐，看起来才是有意为之而不是碰巧。
-   17px 是量出来的最佳值：15px 时英文末行只剩「easier.」一个孤字，17px 时中英文都刚好收尾。 */
+/* Work 区的引言 —— 铺满整行，和下面的卡片左右对齐。
+   之前试过分两栏，虽然「每行字数」好看，但读起来要先看完左边一整栏再跳回右边，
+   一眼看过去像是文字断了。整段横铺才是正常的阅读顺序。
+   行长了就把字号和行距一起加上来：19px / 1.75 —— 字大一点每行字数就少一点，
+   行距松一点眼睛回行才不会串行，这是长行唯一正确的处理方式。 */
 .section-intro {
   color: var(--fg2);
-  font-size: 17px; line-height: 1.8;
+  font-size: clamp(16px, 1.5vw, 19px);
+  line-height: 1.75;
   margin: -6px 0 40px;
-  columns: 2; column-gap: 24px;
   text-wrap: pretty;      /* 支持的浏览器会自动把末行孤字拉回来；不支持的就当没写 */
-}
-/* 960px 以下（平板竖屏、小笔记本、手机）卡片变单列，文字也回到单栏。
-   字号跟着视口走，目的是让「每行字数」在任何宽度上都保持恒定：
-   实测英文 65–73 字符、中文 34–37 字，从 iPad 一路到 320px 手机都不用再单独调。
-   下限 16px 是手机正文的可读底线（也避免 iOS 自动放大），上限 24px 防止在小笔记本上喧宾夺主。 */
-@media (max-width: 959px) {
-  .section-intro {
-    columns: 1;
-    font-size: clamp(16px, 2.7vw, 24px);
-    line-height: 1.65;
-    /* clamp 在 889px 就顶到 24px，容器却还在变宽 —— 不加宽度上限每行会涨到 78 字符。
-       用 em 是因为它同时管住中英文（汉字≈1em、拉丁≈0.46em）。 */
-    max-width: 28em;
-  }
-}
-/* 769–959：下面的卡片已经排成两列了，引言放宽一档回到 65–75 舒适区 */
-@media (min-width: 769px) and (max-width: 959px) {
-  .section-intro { max-width: 31em; }
 }
 .section-label { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
 .section-title { font-size: clamp(28px, 4vw, 42px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 48px; }
@@ -243,7 +225,8 @@ section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
 .news-item:last-child { border-bottom: none; }
 .news-item.visible { opacity: 1; transform: none; }
 .news-date { font-family: var(--font-mono); font-size: 12px; color: var(--fg3); padding-top: 3px; }
-.news-text { font-size: 15px; line-height: 1.6; color: var(--fg2); max-width: 32em; }
+/* 铺满整格。行长了所以行距给到 1.8 —— 长行全靠行距把眼睛接回行首 */
+.news-text { font-size: 16px; line-height: 1.8; color: var(--fg2); }
 .news-text strong { color: var(--fg); }
 
 /* ── PROJECTS ── */
@@ -261,7 +244,7 @@ section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
 .project-title { font-size: 16px; font-weight: 600; line-height: 1.35; min-height: 2.7em; margin-bottom: 6px; }
 .project-sub { font-size: 12px; line-height: 1.5; min-height: 3em; color: var(--fg3); margin-bottom: 10px; font-family: var(--font-mono); }
 [data-theme="dark"] .project-sub { color: var(--fg2); }  /* fg3 深色下只有 3.94:1 */
-.project-desc { font-size: 13px; color: var(--fg2); line-height: 1.6; min-height: 4.8em; margin-bottom: 16px; max-width: 32em; }
+.project-desc { font-size: 13px; color: var(--fg2); line-height: 1.6; min-height: 4.8em; margin-bottom: 16px; }
 .project-links { display: flex; gap: 8px; }
 .project-link { font-size: 12px; color: var(--accent); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s; font-family: var(--font-mono); }
 .project-link:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
@@ -277,7 +260,8 @@ section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
 .tl-role { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
 .tl-company { font-size: 14px; color: var(--fg2); margin-bottom: 6px; }
 /* 32em ≈ 74 个英文字符 / 32 个汉字 —— 不设的话经验区正文会跑到一行 166 字符 */
-.tl-desc { font-size: 13px; color: var(--fg3); line-height: 1.6; max-width: 32em; }
+/* 经历正文是简历里最该被读完的一段，之前 13px 又只占半行，两头都亏 */
+.tl-desc { font-size: 15px; color: var(--fg3); line-height: 1.8; }
 
 /* ── EDUCATION ── */
 .edu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -303,7 +287,7 @@ section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
 
 /* ── CONTACT ── */
 .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-.contact-info p { color: var(--fg2); line-height: 1.75; margin-bottom: 28px; font-size: 15px; max-width: 32em; }
+.contact-info p { color: var(--fg2); line-height: 1.75; margin-bottom: 28px; font-size: 15px; }
 .contact-links { display: flex; flex-direction: column; gap: 12px; }
 .contact-link { display: flex; align-items: center; gap: 12px; color: var(--fg2); text-decoration: none; font-size: 14px; padding: 12px 16px; min-height: 44px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s; }
 .contact-link:hover { border-color: var(--accent); color: var(--accent); }
@@ -421,7 +405,7 @@ section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
 .off-body {
   font-size: 15px; line-height: 1.85; color: var(--fg2); margin-bottom: 20px;
   opacity: 0; transform: translateY(12px);
-  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.22,.68,.24,1); max-width: 32em; }
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.22,.68,.24,1); }
 .oc-in .off-body { opacity: 1; transform: none; }
 .oc-in .off-body:nth-of-type(1) { transition-delay: 170ms; }
 .oc-in .off-body:nth-of-type(2) { transition-delay: 230ms; }
@@ -654,12 +638,12 @@ footer span { color: var(--accent); }
 .cs-block { margin-bottom: 24px; }
 .cs-label { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
 .cs-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.cs-text { font-size: 14px; line-height: 1.8; color: var(--fg2); max-width: 32em; }
+.cs-text { font-size: 15px; line-height: 1.8; color: var(--fg2); }
 .cs-text strong { color: var(--fg); font-weight: 600; }
 .cs-block.cs-role .cs-text { color: var(--fg); }
 .cs-quote { border-left: 2px solid var(--accent); padding-left: 16px; font-size: 15px; line-height: 1.7; color: var(--fg); font-style: italic; }
 /* --fg2 而不是 --fg3：fg3 在这块 bg3 底上只有 ~4.1:1，过不了 4.5 的线 */
-.cs-disclaimer { font-size: 13px; line-height: 1.7; color: var(--fg2); background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; max-width: 32em; }
+.cs-disclaimer { font-size: 13px; line-height: 1.7; color: var(--fg2); background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
 .pmodal-footer { display: flex; flex-wrap: wrap; gap: 10px; padding: 8px 28px 24px; }
 .pmodal-link { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; color: var(--on-accent); background: var(--accent); text-decoration: none; padding: 0 18px; border-radius: 8px; font-weight: 600; transition: all 0.2s; }
 .pmodal-link:hover { background: var(--accent2); }
@@ -697,7 +681,7 @@ footer span { color: var(--accent); }
 }
 
 /* 头像照片 */
-.edu-courses { display: block; margin-top: 10px; font-size: 12px; line-height: 1.65; color: var(--fg2); max-width: 32em; }
+.edu-courses { display: block; margin-top: 10px; font-size: 13px; line-height: 1.75; color: var(--fg2); }
 .avatar-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 
 /* ══════════════════════════════════════════════════════════════
